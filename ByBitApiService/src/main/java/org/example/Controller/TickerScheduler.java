@@ -2,7 +2,7 @@ package org.example.Controller;
 
 
 import org.example.Client.ByBitTickersClient;
-import org.example.Model.Ticker.Order.OrderResponse;
+import org.example.Model.Order.OrderResponse;
 import org.example.Model.Ticker.TickerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;

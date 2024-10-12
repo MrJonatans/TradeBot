@@ -1,6 +1,6 @@
 package org.example.Client;
 
-import org.example.Model.Ticker.Order.OrderResponse;
+import org.example.Model.Order.OrderResponse;
 import org.example.Model.Ticker.TickerResponse;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.reactive.function.client.WebClient;

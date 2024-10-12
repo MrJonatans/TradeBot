@@ -1,4 +1,4 @@
-package org.example.Model.Ticker.Order;
+package org.example.Model.Order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
