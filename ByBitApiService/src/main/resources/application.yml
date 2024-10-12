@@ -1,0 +1,11 @@
+app:
+
+  base-url-bybit: "https://api.bybit.com/v5/market"
+  scheduler:
+    enable: true
+    interval: 10s
+    force-check-delay: 10s
+
+
+server:
+  port: 8080
