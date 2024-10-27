@@ -1,5 +1,6 @@
 package org.example.Client;
 
+import org.example.Model.LastTradeResponse.TradeResponse;
 import org.example.Model.Order.OrderResponse;
 import org.example.Model.Ticker.TickerResponse;
 import org.springframework.http.HttpStatusCode;
@@ -54,6 +55,27 @@ public class ByBitTickersClient {
                         error -> Mono.error(new RuntimeException("Server is not responding")))
 
                 .bodyToMono(TickerResponse.class)
+                .block();
+    }
+
+    public TradeResponse getLastTrades(String tickerCategory, String tickerSymbol, int limit){
+        return webClient.get().uri(uriBuilder -> uriBuilder
+                        .path("/recent-trade")
+                        .queryParam("category", tickerCategory)
+                        .queryParam("symbol", tickerSymbol)
+                        .queryParam("limit", limit)
+                        .build())
+
+                .retrieve()
+                .onStatus(
+                        HttpStatusCode::is4xxClientError,
+                        error -> Mono.error(new RuntimeException("API not found")))
+
+                .onStatus(
+                        HttpStatusCode::is5xxServerError,
+                        error -> Mono.error(new RuntimeException("Server is not responding")))
+
+                .bodyToMono(TradeResponse.class)
                 .block();
     }
 }

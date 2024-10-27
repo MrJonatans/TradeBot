@@ -1,10 +1,10 @@
 app:
 
-  base-url-bybit: "https://api.bybit.com/v5/market"
+  base-url-bybit: "wss://stream.bybit.com/v5/public/linear"
   scheduler:
     enable: true
-    interval: 10s
-    force-check-delay: 10s
+    interval: 20s
+    force-check-delay: 20s
 
 
 server:
