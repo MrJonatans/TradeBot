@@ -37,7 +37,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(@NotNull WebSocketSession session) {
         log.info("WebSocket connection established");
         this.session = session;
-        session.setTextMessageSizeLimit(4096 * 4096); //maby bigger later
+        session.setTextMessageSizeLimit(4096 * 4096); //maybe bigger later
 
     }
 
