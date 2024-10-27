@@ -33,9 +33,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final PingRequest pingRequest = new PingRequest("10001", "ping");
 
-    private final List<TradeResponse> tradeResponses = new ArrayList<>(); //remove
-
-
     @Override
     public void afterConnectionEstablished(@NotNull WebSocketSession session) {
         log.info("WebSocket connection established");
@@ -61,8 +58,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 log.info("------------------------- : {}", response.retMsg().isEmpty() ? response.op() : response.retMsg());
             } else {
                 TradeResponse response = objectMapper.readValue(message.getPayload(), TradeResponse.class);
-                tradeResponses.add(response);
-//                log.info("Received text message: {}", response.topic());  // you can transfer data from here
+                log.info("Received text message ");
+                response.data().forEach(x->log.info(String.valueOf(x)));  // you can transfer data from here
             }
         }
 
@@ -84,7 +81,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     @Scheduled(fixedDelayString = "#{scheduler.interval}")
     public void sendHeartbeatMessage() {
-        log.info(String.valueOf(tradeResponses.size())); //remove
         if (session != null) {
             synchronized (session) {
                 try {
