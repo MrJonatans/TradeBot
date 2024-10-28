@@ -1,35 +1,57 @@
-version: '3.8'
-
 services:
   postgres:
-    image: postgres:latest
-    environment:
-      POSTGRES_DB: mydb
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+    build: 
+      context: ./postgres
+      dockerfile: Dockerfile
+    env_file:
+      - ./postgres/postgres.env 
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init-scripts:/docker-entrypoint-initdb.d  
+    networks:
+      - DB-metrik-test
 
-  mongodb:
-    image: mongo:latest
+  postgres_exporter:
+    image: docker.io/prometheuscommunity/postgres-exporter
+    env_file:
+      - ./postgres_exporter/postgres_exporter.env 
+    depends_on:
+      - postgres
     ports:
-      - "27017:27017"
+      - "9187:9187"  # for Prometheus
+    networks:
+      - DB-metrik-test
 
-  cassandra:
-    image: cassandra:latest
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - prometheus_data:/prometheus
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml  
     ports:
-      - "9042:9042"
-    environment:
-      CASSANDRA_CLUSTER_NAME: "MyCluster"
-      CASSANDRA_DC: "DC1"
-      CASSANDRA_RACK: "RAC1"
+      - "9090:9090"
+    depends_on:
+      - postgres_exporter
+    networks:
+      - DB-metrik-test
+  
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    env_file:
+      - ./grafana/grafana.env
+    networks:
+      - DB-metrik-test
+    
+volumes:
+  postgres_data:
+  grafana_data:
+  prometheus_data:
 
-  clickhouse:
-    image: yandex/clickhouse-server:latest
-    ports:
-      - "8123:8123"
-      - "9000:9000"
-    environment:
-      CLICKHOUSE_USER: default
-      CLICKHOUSE_PASSWORD: password
-      CLICKHOUSE_DB: mydb
+networks:
+  DB-metrik-test:
